@@ -47,5 +47,10 @@
         android:title="@string/master_clear_title"
         android:summary="@string/master_clear_summary"
         android:fragment="com.android.settings.MasterClear" />
+	<!-- Advantech reset -->
+    <PreferenceScreen
+        android:title="@string/adv_backup_title"
+        android:summary="@string/adv_backup_summary"
+        android:fragment="com.android.settings.AdvBackup" />
 
 </PreferenceScreen>
