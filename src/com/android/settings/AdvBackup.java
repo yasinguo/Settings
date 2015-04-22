@@ -27,52 +27,7 @@ public class AdvBackup  extends Fragment {
     private static final String TAG = "AdvBackup";
     
     private View mContentView;
-    private static final int KEYGUARD_REQUEST = 55;
-
-    static final String ERASE_EXTERNAL_EXTRA = "erase_sd";
-
     private Button mInitiateButton;
-    private View mExternalStorageContainer;
-    private CheckBox mExternalStorage;
-
-    /**
-     * Keyguard validation is run using the standard {@link ConfirmLockPattern}
-     * component as a subactivity
-     * @param request the request code to be returned once confirmation finishes
-     * @return true if confirmation launched
-     */
-    private boolean runKeyguardConfirmation(int request) {
-        Resources res = getActivity().getResources();
-        return new ChooseLockSettingsHelper(getActivity(), this)
-                .launchConfirmationActivity(request,
-                        res.getText(R.string.master_clear_gesture_prompt),
-                        res.getText(R.string.master_clear_gesture_explanation));
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode != KEYGUARD_REQUEST) {
-            return;
-        }
-
-        // If the user entered a valid keyguard trace, present the final
-        // confirmation prompt; otherwise, go back to the initial state.
-        if (resultCode == Activity.RESULT_OK) {
-            showFinalConfirmation();
-        } else {
-            establishInitialState();
-        }
-    }
-
-    private void showFinalConfirmation() {
-        Preference preference = new Preference(getActivity());
-        preference.setFragment(MasterClearConfirm.class.getName());
-        preference.setTitle(R.string.master_clear_confirm_title);
-        preference.getExtras().putBoolean(ERASE_EXTERNAL_EXTRA, mExternalStorage.isChecked());
-        ((PreferenceActivity) getActivity()).onPreferenceStartFragment(null, preference);
-    }
 
     /**
      * If the user clicks to begin the reset sequence, we next require a
@@ -82,9 +37,7 @@ public class AdvBackup  extends Fragment {
     private final Button.OnClickListener mInitiateListener = new Button.OnClickListener() {
 
         public void onClick(View v) {
-            if (!runKeyguardConfirmation(KEYGUARD_REQUEST)) {
-                showFinalConfirmation();
-            }
+        	Log.e("yixuan", "=============================");
         }
     };
 
@@ -101,114 +54,16 @@ public class AdvBackup  extends Fragment {
      * to change contents.
      */
     private void establishInitialState() {
-        mInitiateButton = (Button) mContentView.findViewById(R.id.initiate_master_clear);
+        mInitiateButton = (Button) mContentView.findViewById(R.id.adv_backup_btn);
         mInitiateButton.setOnClickListener(mInitiateListener);
-        mExternalStorageContainer = mContentView.findViewById(R.id.erase_external_container);
-        mExternalStorage = (CheckBox) mContentView.findViewById(R.id.erase_external);
-
-        /*
-         * If the external storage is emulated, it will be erased with a factory
-         * reset at any rate. There is no need to have a separate option until
-         * we have a factory reset that only erases some directories and not
-         * others. Likewise, if it's non-removable storage, it could potentially have been
-         * encrypted, and will also need to be wiped.
-         */
-        boolean isExtStorageEmulated = Environment.isExternalStorageEmulated();
-        if (isExtStorageEmulated
-                || (!Environment.isExternalStorageRemovable() && isExtStorageEncrypted())) {
-            mExternalStorageContainer.setVisibility(View.GONE);
-
-            final View externalOption = mContentView.findViewById(R.id.erase_external_option_text);
-            externalOption.setVisibility(View.GONE);
-
-            final View externalAlsoErased = mContentView.findViewById(R.id.also_erases_external);
-            externalAlsoErased.setVisibility(View.VISIBLE);
-
-            // If it's not emulated, it is on a separate partition but it means we're doing
-            // a force wipe due to encryption.
-            mExternalStorage.setChecked(!isExtStorageEmulated);
-        } else {
-            mExternalStorageContainer.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    mExternalStorage.toggle();
-                }
-            });
-        }
-
-        loadAccountList();
-    }
-
-    private boolean isExtStorageEncrypted() {
-        String state = SystemProperties.get("vold.decrypt");
-        return !"".equals(state);
-    }
-
-    private void loadAccountList() {
-        View accountsLabel = mContentView.findViewById(R.id.accounts_label);
-        LinearLayout contents = (LinearLayout)mContentView.findViewById(R.id.accounts);
-        contents.removeAllViews();
-
-        Context context = getActivity();
-
-        AccountManager mgr = AccountManager.get(context);
-        Account[] accounts = mgr.getAccounts();
-        final int N = accounts.length;
-        if (N == 0) {
-            accountsLabel.setVisibility(View.GONE);
-            contents.setVisibility(View.GONE);
-            return;
-        }
-
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE);
-
-        AuthenticatorDescription[] descs = AccountManager.get(context).getAuthenticatorTypes();
-        final int M = descs.length;
-
-        for (int i=0; i<N; i++) {
-            Account account = accounts[i];
-            AuthenticatorDescription desc = null;
-            for (int j=0; j<M; j++) {
-                if (account.type.equals(descs[j].type)) {
-                    desc = descs[j];
-                    break;
-                }
-            }
-            if (desc == null) {
-                Log.w(TAG, "No descriptor for account name=" + account.name
-                        + " type=" + account.type);
-                continue;
-            }
-            Drawable icon = null;
-            try {
-                if (desc.iconId != 0) {
-                    Context authContext = context.createPackageContext(desc.packageName, 0);
-                    icon = authContext.getResources().getDrawable(desc.iconId);
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.w(TAG, "No icon for account type " + desc.type);
-            }
-
-            TextView child = (TextView)inflater.inflate(R.layout.master_clear_account,
-                    contents, false);
-            child.setText(account.name);
-            if (icon != null) {
-                child.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-            }
-            contents.addView(child);
-        }
-
-        accountsLabel.setVisibility(View.VISIBLE);
-        contents.setVisibility(View.VISIBLE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        mContentView = inflater.inflate(R.layout.advbackup, null);
+        mContentView = inflater.inflate(R.layout.master_clear, null);
 
+        establishInitialState();
         return mContentView;
     }
 }
