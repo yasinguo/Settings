@@ -2242,6 +2242,7 @@
     <string name="adv_backup_title">User data backup</string>
     <string name="adv_backup_summary" product="tablet">Backup data on tablet</string>
     <string name="adv_backup_summary" product="default">Backup all data on phone</string>
+    <string name="adv_backup_desc" product="tablet">"This will backup data from your tablet\'s <b>internal storage</b>, including:\n\n<li>/data/data</li>\n<li>System and app data and settings</li>\n<li>Downloaded apps</li>"</string>
     <!-- SD card & phone storage settings screen, message on screen after user selects Factory data reset [CHAR LIMIT=NONE] -->
     <string name="master_clear_desc" product="tablet">"This will erase all data from your tablet\'s <b>internal storage</b>, including:\n\n<li>Your Google account</li>\n<li>System and app data and settings</li>\n<li>Downloaded apps</li>"</string>
     <!-- SD card & phone storage settings screen, message on screen after user selects Factory data reset [CHAR LIMIT=NONE] -->
