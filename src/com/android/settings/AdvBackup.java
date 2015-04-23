@@ -25,7 +25,10 @@ import android.widget.TextView;
 
 public class AdvBackup  extends Fragment {
     private static final String TAG = "AdvBackup";
-    
+	
+	private static final String BACKUP_INTENT = "android.advantech.advbackup";
+	private static final String RECOVERY_INTENT = "android.advantech.advrecovery";
+	
     private View mContentView;
     private Button mInitiateButton;
 
@@ -37,7 +40,8 @@ public class AdvBackup  extends Fragment {
     private final Button.OnClickListener mInitiateListener = new Button.OnClickListener() {
 
         public void onClick(View v) {
-        	Log.e("yixuan", "=============================");
+        	Log.e("yixuan", "===========BACKUP==================");
+        	getActivity().sendBroadcast(new Intent(BACKUP_INTENT));
         }
     };
 
