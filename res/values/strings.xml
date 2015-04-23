@@ -2239,7 +2239,7 @@
     <!-- SD card & phone storage settings screen, setting option summary text under Internal phone storage heading -->
     <string name="master_clear_summary" product="default">Erases all data on phone</string>
 
-    <!-- Advantech Backup-->
+    <!-- Advantech Backup&Recovery-->
     <string name="adv_backup_title">User data backup</string>
     <string name="adv_backup_summary" product="tablet">Backup data on tablet</string>
     <string name="adv_backup_summary" product="default">Backup all data on phone</string>
@@ -2247,6 +2247,14 @@
     <string name="adv_backup_desc" product="default">"This will backup data from your tablet\'s <b>internal storage</b>, including:\n\n<li>/data/data</li>\n<li>System and app data and settings</li>\n<li>Downloaded apps</li>"</string>
     <string name="adv_backup_button_text" product="tablet">Backup</string>
     <string name="adv_backup_button_text" product="default">Backup</string>
+    
+    <string name="adv_recovery_title">User data recovery</string>
+    <string name="adv_recovery_summary" product="tablet">Recovery data on tablet</string>
+    <string name="adv_recovery_summary" product="default">Recovery all data on phone</string>
+    <string name="adv_recovery_desc" product="tablet">"This will recovery data from your tablet\'s <b>internal storage</b>, including:\n\n<li>/data/data</li>\n<li>System and app data and settings</li>\n<li>Downloaded apps</li>"</string>
+    <string name="adv_recovery_desc" product="default">"This will recovery data from your tablet\'s <b>internal storage</b>, including:\n\n<li>/data/data</li>\n<li>System and app data and settings</li>\n<li>Downloaded apps</li>"</string>
+    <string name="adv_recovery_button_text" product="tablet">Recovery</string>
+    <string name="adv_brecovery_button_text" product="default">Recovery</string>
 
     <!-- SD card & phone storage settings screen, message on screen after user selects Factory data reset [CHAR LIMIT=NONE] -->
     <string name="master_clear_desc" product="tablet">"This will erase all data from your tablet\'s <b>internal storage</b>, including:\n\n<li>Your Google account</li>\n<li>System and app data and settings</li>\n<li>Downloaded apps</li>"</string>

@@ -23,10 +23,9 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AdvBackup  extends Fragment {
-    private static final String TAG = "AdvBackup";
+public class AdvRecovery  extends Fragment {
+    private static final String TAG = "AdvRecovery";
 	
-	private static final String BACKUP_INTENT = "android.advantech.advbackup";
 	private static final String RECOVERY_INTENT = "android.advantech.advrecovery";
 	
     private View mContentView;
@@ -40,8 +39,8 @@ public class AdvBackup  extends Fragment {
     private final Button.OnClickListener mInitiateListener = new Button.OnClickListener() {
 
         public void onClick(View v) {
-        	Log.e("yixuan", "===========BACKUP==================");
-        	getActivity().sendBroadcast(new Intent(BACKUP_INTENT));
+        	Log.e("yixuan", "===========RECOVERY_INTENT==================");
+        	getActivity().sendBroadcast(new Intent(RECOVERY_INTENT));
         }
     };
 
@@ -58,14 +57,14 @@ public class AdvBackup  extends Fragment {
      * to change contents.
      */
     private void establishInitialState() {
-        mInitiateButton = (Button) mContentView.findViewById(R.id.adv_backup_btn);
+        mInitiateButton = (Button) mContentView.findViewById(R.id.adv_recovery_btn);
         mInitiateButton.setOnClickListener(mInitiateListener);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        mContentView = inflater.inflate(R.layout.advbackup, null);
+        mContentView = inflater.inflate(R.layout.advrecovery, null);
 
         establishInitialState();
         return mContentView;
