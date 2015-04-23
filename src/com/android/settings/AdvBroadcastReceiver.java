@@ -1,7 +1,14 @@
 package com.android.settings;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,12 +25,24 @@ public class AdvBroadcastReceiver extends BroadcastReceiver {
     
     @Override
     public void onReceive(Context context, Intent intent) {
+    	ZipUtils ziputils = new ZipUtils();
         if (intent.getAction().equals(BACKUP_INTENT)) {
         	Log.e("advantech", "receive BACKUP_INTENT");
-        	ZipUtils.zipFolder("/data/data", "/data/data.zip");
+        	try {
+        		ziputils.CreateZip("/data/data", "/data/data.zip");
+        		//ziputils.zipFolder("/data/data", "/data/data.zip");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         } else if (intent.getAction().equals(RECOVERY_INTENT)) {
         	Log.e("advantech", "receive RECOVERY_INTENT");
-			ZipUtils.unZipFolder("/data/data.zip", "/data/data/");
+			try {
+				ziputils.unZipFolder("/data/data.zip", "/data/data/");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
     }
     
@@ -35,6 +54,55 @@ public class AdvBroadcastReceiver extends BroadcastReceiver {
     	private ZipUtils() {
     	}
 
+    	/** 创建一个压缩文件，from为文件夹路径，to为创建好后压缩文件路径 */
+    	public static void CreateZip(String from, String to) throws IOException {
+    		List<File> list = getFiles(from);
+    		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(
+    				new File(to)));
+    		for (File f : list) {
+    			InputStream in = new FileInputStream(f);
+    			String name = getRelName(from, f);
+
+    			ZipEntry en = new ZipEntry(new File(from).getName() + "/" + name);
+    			en.setSize(f.length());
+
+    			out.putNextEntry(en);
+    			out.setComment("中文测试");
+
+    			int len = 0;
+    			byte[] buffer = new byte[1024];
+    			while (-1 != (len = in.read(buffer))) {
+    				out.write(buffer, 0, len);
+    			}
+    			in.close();
+    		}
+    		out.close();
+    	}
+
+    	/** 获取文件的相对路径 */
+    	private static String getRelName(String from, File f) {
+    		// TODO Auto-generated method stub
+    		String a = f.getAbsolutePath().replace(from + "\\", "");
+    		a = a.replace("\\", "/");
+    		System.out.println(from + "---" + a);
+    		return a;
+    	}
+
+    	/** 获取路径下所有文件，包括文件夹下的 */
+    	private static List<File> getFiles(String sou) {
+    		List<File> list = new ArrayList<File>();
+    		File f = new File(sou);
+    		File files[] = f.listFiles();
+    		for (File file : files) {
+    			if (file.isFile()) {
+    				list.add(file);
+    			} else {
+    				list.addAll(getFiles(file.getPath()));
+    			}
+    		}
+    		return list;
+    	}
+    	
     	/**
     	 * 取得压缩包中的 文件列表(文件夹,文件自选)
     	 * 
@@ -208,9 +276,10 @@ public class AdvBroadcastReceiver extends BroadcastReceiver {
     		}
 
     		java.io.File file = new java.io.File(folderPath + filePath);
-
+Log.e("advantech", file.toString());
     		// 判断是不是文件
     		if (file.isFile()) {
+Log.e("advantech", "file.isFile()");
     			java.util.zip.ZipEntry zipEntry = new java.util.zip.ZipEntry(
     					filePath);
     			java.io.FileInputStream inputStream = new java.io.FileInputStream(
@@ -226,6 +295,7 @@ public class AdvBroadcastReceiver extends BroadcastReceiver {
 
     			zipOut.closeEntry();
     		} else {
+Log.e("advantech", "!!!!!!!!!file.isFile()");
     			// 文件夹的方式,获取文件夹下的子文件
     			String fileList[] = file.list();
 

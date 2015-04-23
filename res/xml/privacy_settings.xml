@@ -49,6 +49,10 @@
         android:fragment="com.android.settings.MasterClear" />
 	<!-- Advantech Backup&Recovery -->
     <PreferenceScreen
+        android:title="@string/adv_backup_title"
+        android:summary="@string/adv_backup_summary"
+        android:fragment="com.android.settings.AdvBackup" />
+    <PreferenceScreen
         android:title="@string/adv_recovery_title"
         android:summary="@string/adv_recovery_summary"
         android:fragment="com.android.settings.AdvRecovery" />
