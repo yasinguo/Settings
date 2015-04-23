@@ -3,8 +3,6 @@ package com.android.settings;
 import java.io.File;
 import java.io.InputStream;
 
-import com.advantech.advbackup.ZipUtils;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
